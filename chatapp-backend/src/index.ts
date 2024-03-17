@@ -27,7 +27,7 @@ app.use(cors());
 app.use("/api/v1", routes);
 
 //running server on the port
-app.listen(PORT, () => {
+httpServer.listen(PORT, () => {
   console.log("Server is up at " + PORT);
 });
 

@@ -84,18 +84,21 @@ export const loginUserController = async (req: Request, res: Response) => {
       where: {
         email: data.email,
       },
-      select: {
-        email: true,
-        firstName: true,
-        lastName: true,
-        id: true,
-      },
     });
 
     if (!userExists) {
       return res.status(statusCodes.NOT_FOUND).json({
         success: false,
         message: "user not found",
+      });
+    }
+
+    const checkPass = await bcrypt.compare(data.password, userExists.password);
+
+    if (!checkPass) {
+      return res.status(statusCodes.UNAUTHORIZED).json({
+        success: false,
+        message: "Password incorrect",
       });
     }
 
@@ -117,12 +120,74 @@ export const loginUserController = async (req: Request, res: Response) => {
       success: true,
       message: "user logged in successfully",
       token: jwtToken,
+      user: {
+        firstName: userExists.firstName,
+        lastName: userExists.lastName,
+        email: userExists.email,
+        id: userExists.id,
+      },
     });
   } catch (error) {
     console.error(error);
     return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
       success: false,
       message: "failed to login user",
+    });
+  }
+};
+
+export const getAllUsersControllers = async (req: Request, res: Response) => {
+  try {
+    const userId = req.headers.userId;
+    const users = await prisma.user.findMany({
+      select: {
+        firstName: true,
+        lastName: true,
+        email: true,
+        id: true,
+      },
+    });
+
+    const filteredUsers = users.filter((item) => item.id !== userId);
+
+    return res.status(statusCodes.OK).json({
+      success: true,
+      users: filteredUsers,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+      success: false,
+      message: "failed to fetch users data",
+    });
+  }
+};
+
+export const getUserDataControllers = async (req: Request, res: Response) => {
+  try {
+    const userId = req.headers.userId as string;
+
+    const user = await prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+      select: {
+        firstName: true,
+        lastName: true,
+        email: true,
+        id: true,
+      },
+    });
+
+    return res.status(statusCodes.OK).json({
+      success: true,
+      user,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+      success: false,
+      message: "failed to fetch users data",
     });
   }
 };

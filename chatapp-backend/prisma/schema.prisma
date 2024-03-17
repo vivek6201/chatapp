@@ -32,10 +32,11 @@ model Profile {
 }
 
 model Messages {
-  id         String  @id @default(uuid())
-  sender     User?   @relation(name: "sentMessages", fields: [senderId], references: [id])
+  id         String   @id @default(uuid())
+  sender     User?    @relation(name: "sentMessages", fields: [senderId], references: [id])
   senderId   String?
-  reciever   User?   @relation(name: "recievedMessages", fields: [recieverId], references: [id])
+  reciever   User?    @relation(name: "recievedMessages", fields: [recieverId], references: [id])
   recieverId String?
   Message    String
+  createdAt  DateTime @default(now())
 }
