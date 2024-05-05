@@ -1,4 +1,4 @@
 export const urls = {
-  backendUrl: "http://localhost:4000",
-  frontendUrl: "http://localhost:3000",
+  backendUrl: "https://chatapp-b5vb.onrender.com",
+  frontendUrl: "https://chatapp-nine-pi.vercel.app/",
 };
