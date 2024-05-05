@@ -112,7 +112,10 @@ export const loginUserController = async (req: Request, res: Response) => {
 
     if (!secret) {
       console.log("secret not found");
-      return;
+      return res.status(500).json({
+        success: false,
+        message: "Internal server error"
+      })
     }
 
     const jwtToken = jwt.sign(payload, secret);
