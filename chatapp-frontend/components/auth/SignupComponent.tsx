@@ -6,6 +6,7 @@ import {
   CardHeader,
   CardContent,
   Card,
+  CardFooter,
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -14,6 +15,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { urls } from "@/lib/constants";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import Link from "next/link";
 
 interface UserForm {
   firstName: string;
@@ -141,6 +143,14 @@ export default function SignupComponent() {
           </Button>
         </form>
       </CardContent>
+      <CardFooter>
+        <p className="text-center">
+          Already have an account{" "}
+          <Link href={"/login"} className="text-blue-500 hover:underline">
+            login
+          </Link>
+        </p>
+      </CardFooter>
     </Card>
   );
 }
